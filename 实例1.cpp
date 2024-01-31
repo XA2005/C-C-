@@ -1,104 +1,131 @@
+﻿#include "stdlib.h"
 #include <iostream>
-
-// 声明一个表示矩形的类 Rectangle
-class Rectangle {
- // 数据成员
-private: int width;
-         int height;
+#include "stdio.h"
+using namespace std;
+int n=0,k=0;
+// 声明一个表示矩形的类 Physcis
+class Physcis {
+    // 数据成员
+private: 
+         int mechanics;
+         int electricity;
+         
 public:
-    int a=width,b=height;
-    // 构造函数
-    Rectangle(int w, int h) : width(w), height(h) {
-        std::cout << "Constructing a rectangle with dimensions: " << width << "x" << height << std::endl;
+    int out1 = mechanics, out2 = electricity;
+    // 构造函数(使用初始化列表进行赋值）
+    Physcis(int M, int E) : mechanics(M), electricity(E) {
+        k += 1;
+        cout << "第"<<k<<"个构造Physci对象已创建: " << mechanics << "x" << electricity << endl;
     }
     // 拷贝构造函数
-    Rectangle(const Rectangle &other) : width(other.width), height(other.height) {
-        std::cout << "Copying a rectangle with dimensions: " << width << "x" << height << std::endl;
+    Physcis(const Physcis& pointer) : mechanics(pointer.mechanics), electricity(pointer.electricity) {
+        cout << "已拷贝构造对象: " << mechanics << "x" << electricity << endl;
     }
     // 析构函数
-    ~Rectangle() {
-        std::cout << "Destructing a rectangle with dimensions: " << width << "x" << height << std::endl;
+    ~Physcis() {
+        n += 1;
+        cout << "第"<<n<<"个构造Physcis对象已销毁: " << mechanics << "x" << electricity << endl;
     }
-    // 成员函数，计算面积
-    int area() const {
-        return width * height;
+    // 成员函数，计算乘积
+    int accumulate() const {
+        return mechanics * electricity;
     }
     // 友元函数，允许外部直接访问私有数据
-    friend void displayDimensions(Rectangle &rect);
-    // 内联函数，提高效率
-    inline void resize(int newWidth, int newHeight) {
-        width = newWidth;
-        height = newHeight;
+    friend void Friend_function(Physcis& pointer);
+    // 内联函数
+    inline void resize(int Mechanics, int Electricity) {
+        mechanics = Mechanics;
+        electricity = Electricity;
+        cout << "内联函数已调用，" << "mechanics值为: " <<mechanics << ", electricity值为: " << electricity << endl;;
     }
     // 使用 this 指针访问当前对象的数据成员
-    void scaleByFactor(int factor) {
-        width *= factor;
-        height *= factor;
-        std::cout << "Scaled rectangle (" << this->width << "x" << this->height << ") by a factor of " << factor << std::endl;
+    void scaleByFactor(int multiple) {
+        mechanics *= multiple;
+        electricity *= multiple;
+        std::cout << "this指针函数已调用，新的值为：" << this->mechanics << "x" << this->electricity << "， 扩大倍数为： " << multiple << std::endl;
     }
     // 静态成员，记录创建的矩形数量
     static int count;
 };
 
+
 // 实现静态成员初始化
-int Rectangle::count = 0;
+int Physcis::count = 0;
 // 友元函数实现
-void displayDimensions(Rectangle &rect) {
-    std::cout << "Width: " << rect.width << ", Height: " << rect.height << std::endl;
+void Friend_function(Physcis& pointer) {
+    cout << "友元函数已调用，" << "mechanics值为: " << pointer.mechanics << ", electricity值为: " << pointer.electricity << endl;
 }
 // 重载运算符
-Rectangle operator+(const Rectangle &rect1, const Rectangle &rect2) {
-    return Rectangle(rect1.a + rect2.a, rect1.b + rect2.b);
+Physcis operator+(const Physcis& pointer1, const Physcis& pointer2) {
+    return Physcis(pointer1.out1 + pointer2.out2, pointer1. out2+ pointer2.out1);
 }
 
+
 // 纯虚函数，抽象基类
-class Shape {
+class Math {
+
 public:
-    virtual ~Shape() {}
-    virtual int getArea() const = 0; // 抽象方法（纯虚函数）
+    Math() {};
+    virtual ~Math() {}
+    virtual int number () const = 0; // 抽象方法（纯虚函数）
 };
 
-// 继承自 Shape 的子类 Square
-class Square : public Shape {
+
+// 继承自 Math 的子类 Algebra
+class Algebra : public Math {
 private:
     int side;
-
 public:
-    Square(int s) : side(s) {}
-
-    int getArea() const override {
+    Algebra(int s) : side(s) {}
+    int number() const override {
         return side * side;
     }
 };
 
+
 int main() {
+    int m, e;
+    cout<<"请输入electricity的值：";
+    scanf_s("%d",&e);
+    cout<<"请输入mechanics的值：";
+    scanf_s("%d",&m);
     // 创建指向类的指针
-    Rectangle* rectPtr = new Rectangle(5, 10);
-    ++Rectangle::count; // 访问静态成员
-
-    displayDimensions(*rectPtr); // 调用友元函数
-    rectPtr->resize(8, 12); // 调用内联函数
-
+    Physcis* pointer = new Physcis(m,e);
+    // 访问静态成员
+    ++Physcis::count; 
+    printf("\n");
+    cout<<"count值为："<<pointer->count << endl;
+    printf("\n");
+    // 调用友元函数
+    Friend_function(*pointer); 
+    printf("\n");
+    // 调用内联函数
+    cout << "请重新输入electricity的值：";
+    cin>>e;
+    cout << "请输入mechanics的值：";
+    cin >> m;
+    printf("\n");
+    pointer->resize(m, e);                                                                                                   
+    printf("\n");
     // 显示 this 指针的应用
-    rectPtr->scaleByFactor(2);
-
+    pointer->scaleByFactor(2);
+    printf("\n");
     // 重载运算符应用
-    Rectangle rect3 = *rectPtr + Rectangle(3, 4);
-    std::cout << "Rect3's area: " << rect3.area() << std::endl;
-
+    Physcis rect3 = *pointer + Physcis(3, 4);
+    std::cout << "Rect3's accumulate: " << rect3.accumulate() << std::endl;
+    printf("\n");
     // 多态和抽象的应用
-    //Shape* shapes[2] = {new Square(5), new Rectangle(3, 4)};
-    //for (auto shape : shapes) {
-    //    std::cout << "Area of shape: " << shape->getArea() << std::endl;
-    //}
-
-    delete rectPtr; // 释放内存
-    scanf_s("%d");
+    Math* array[2] = {new Algebra(5), new Algebra(7)};
+    for (auto array : array) {
+    std::cout << "accumulate of array: " << array->number() << std::endl;
+    }
+    // 释放内存
+    delete pointer; 
+    system("pause");
     return 0;
 }
-
 /*以上代码中涵盖了大部分C++面向对象编程中的类相关知识点，
  * 包括但不限于：数据成员、构造函数、析构函数、拷贝构造函数、
  * 成员函数、友元函数、内联函数、this指针、指向类的指针、
  * 静态成员、重载运算符、虚函数以及纯虚函数，
- * 并通过继承、封装、多态和抽象展示了类的设计特点。*/
+ * 并通过继承、封装、多态和抽象展示了类的设计*/
